@@ -27,14 +27,25 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/admin', adminRoutes);
 app.use('/api/artworks', artworkRoutes);
 
+// root route (added)
+app.get('/', (req, res) => {
+  res.send('AK Arts 05 API is running');
+});
+
 // health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'AK Arts 05 backend' });
 });
 
+// 404 handler (added)
+app.use((req, res) => {
+  res.status(404).json({
+    message: 'Route not found'
+  });
+});
+
 // global error handler fallback
 app.use((err, req, res, next) => {
-  // eslint-disable-next-line no-console
   console.error('Unhandled error:', err);
   const status = err.statusCode || 500;
   res.status(status).json({
@@ -44,6 +55,5 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  // eslint-disable-next-line no-console
   console.log(`Server running on port ${PORT}`);
 });

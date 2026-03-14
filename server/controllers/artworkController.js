@@ -1,5 +1,3 @@
-const fs = require('fs');
-const path = require('path');
 const Artwork = require('../models/Artwork');
 
 // POST /api/artworks
@@ -12,7 +10,7 @@ exports.createArtwork = async (req, res) => {
         .json({ message: 'Title, category, and image are required' });
     }
 
-    const imageUrl = `/uploads/${req.file.filename}`;
+    const imageUrl = req.file.path; // Cloudinary URL
 
     const artwork = await Artwork.create({
       title,
@@ -44,15 +42,6 @@ exports.deleteArtwork = async (req, res) => {
     if (!artwork) {
       return res.status(404).json({ message: 'Artwork not found' });
     }
-
-    // remove image file if it exists
-    const filePath = path.join(
-      __dirname,
-      '..',
-      'uploads',
-      path.basename(artwork.imageUrl)
-    );
-    fs.unlink(filePath, () => {}); // best-effort; ignore errors
 
     await artwork.deleteOne();
     return res.json({ message: 'Artwork deleted' });

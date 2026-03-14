@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-const path = require('path');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -19,9 +18,6 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
-
-// serve uploaded images statically
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // routes
 app.use('/api/admin', adminRoutes);

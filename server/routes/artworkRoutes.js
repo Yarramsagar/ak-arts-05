@@ -1,5 +1,6 @@
 const express = require('express');
 const multer = require('multer');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const path = require('path');
 const {
   createArtwork,
@@ -7,17 +8,20 @@ const {
   deleteArtwork,
 } = require('../controllers/artworkController');
 const authMiddleware = require('../middleware/authMiddleware');
+const cloudinary = require('../config/cloudinary');
 
 const router = express.Router();
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '..', 'uploads'));
-  },
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    const base = path.basename(file.originalname, ext).replace(/\s+/g, '-');
-    cb(null, `${Date.now()}-${base}${ext}`);
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'ak-arts',
+    allowed_formats: ['jpg', 'jpeg', 'png'],
+    public_id: (req, file) => {
+      const ext = path.extname(file.originalname);
+      const base = path.basename(file.originalname, ext).replace(/\s+/g, '-');
+      return `${Date.now()}-${base}`;
+    },
   },
 });
 

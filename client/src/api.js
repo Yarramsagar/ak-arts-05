@@ -13,4 +13,6 @@ export const setAuthToken = (token) => {
   }
 };
 
+export const deleteArtwork = (id) => api.delete(`/artworks/${id}`);
+
 export default api;

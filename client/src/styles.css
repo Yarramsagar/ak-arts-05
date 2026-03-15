@@ -700,6 +700,27 @@ textarea {
   color: var(--muted);
 }
 
+.art-delete-list {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.art-delete-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #111622;
+}
+
+.art-delete-row .tag {
+  margin-left: 8px;
+}
+
 .lightbox-close {
   position: absolute;
   top: 10px;

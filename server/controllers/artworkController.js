@@ -1,4 +1,6 @@
+const path = require('path');
 const Artwork = require('../models/Artwork');
+const cloudinary = require('../config/cloudinary');
 
 // POST /api/artworks
 exports.createArtwork = async (req, res) => {
@@ -41,6 +43,21 @@ exports.deleteArtwork = async (req, res) => {
     const artwork = await Artwork.findById(req.params.id);
     if (!artwork) {
       return res.status(404).json({ message: 'Artwork not found' });
+    }
+
+    // best effort: delete image from Cloudinary
+    if (artwork.imageUrl) {
+      try {
+        const url = new URL(artwork.imageUrl);
+        const afterUpload = url.pathname.split('/upload/')[1];
+        if (afterUpload) {
+          const noVersion = afterUpload.replace(/^v\d+\//, '');
+          const publicId = noVersion.replace(path.extname(noVersion), '');
+          await cloudinary.uploader.destroy(publicId);
+        }
+      } catch (err) {
+        console.error('Cloudinary delete error:', err.message);
+      }
     }
 
     await artwork.deleteOne();

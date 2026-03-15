@@ -66,7 +66,7 @@ const Home = () => {
           </p>
           <div className="hero-actions">
             <a className="btn primary" href="/gallery">
-              View Gallery
+              View My Gallery
             </a>
             <a className="btn secondary" href="/contact">
               Contact Artist

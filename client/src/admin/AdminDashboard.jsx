@@ -47,6 +47,16 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleDelete = async (id) => {
+    setError('');
+    try {
+      await api.delete(`/artworks/${id}`);
+      setArtworks((prev) => prev.filter((art) => art._id !== id));
+    } catch (err) {
+      setError(err.response?.data?.message || 'Delete failed');
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     const file = files ? files[0] : null;
@@ -207,7 +217,26 @@ const AdminDashboard = () => {
             </button>
           </div>
           {artworks.length ? (
-            <ArtworkGrid artworks={artworks} />
+            <>
+              <ArtworkGrid artworks={artworks} />
+              <div className="art-delete-list">
+                {artworks.map((art) => (
+                  <div key={art._id} className="art-delete-row">
+                    <div>
+                      <strong>{art.title}</strong>
+                      <span className="tag">{art.category}</span>
+                    </div>
+                    <button
+                      className="btn ghost"
+                      onClick={() => handleDelete(art._id)}
+                      type="button"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </>
           ) : (
             <p className="muted">No artworks yet.</p>
           )}
